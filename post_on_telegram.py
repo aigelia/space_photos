@@ -1,10 +1,10 @@
 import argparse
-import os
-from random import shuffle
 from time import sleep
 
 from decouple import config
 import telegram
+
+from post_helper import collect_file_paths, publish_single_photo
 
 
 def create_parser():
@@ -18,21 +18,6 @@ def create_parser():
         help="Задержка между публикациями в часах"
     )
     return parser
-
-
-def collect_file_paths(directory="images"):
-    file_paths = []
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            full_path = os.path.join(root, file)
-            file_paths.append(full_path)
-    shuffle(file_paths)
-    return file_paths
-
-
-def publish_single_photo(bot, chat_id, file_path):
-    with open(file_path, "rb") as photo:
-        bot.send_photo(chat_id=chat_id, photo=photo)
 
 
 def main():
