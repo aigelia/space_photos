@@ -14,6 +14,10 @@ def create_parser():
         "--launch_id",
         help="ID запуска SpaceX для скачивания фото"
     )
+    parser.add_argument(
+        "--folder",
+        help="Директория для сохранения изображений"
+    )
     return parser
 
 
@@ -40,8 +44,8 @@ def main():
     parser = create_parser()
     args = parser.parse_args()
     launch_id = args.launch_id if args.launch_id else "latest"
-    images_dir = Path("images")
-    images_dir.mkdir(exist_ok=True)
+    images_dir = Path(args.folder) if args.folder else Path("images")
+    images_dir.mkdir(parents=True, exist_ok=True)
     try:
         spacex_photos = get_spacex_photos(launch_id)
         if spacex_photos:
