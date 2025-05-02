@@ -34,7 +34,7 @@ python3 post_on_telegram.py --sleeptime 1
 Скрипт `post_random_photo.py` публикует **одно изображение** в Telegram-канал. При запуске вы можете указать конкретный файл через аргумент `--filepath`:
 
 ```bash
-space_photos user$ python3 post_random_photo.py --filepath images/apod/apod_14.jpg
+python3 post_random_photo.py --filepath images/apod/apod_14.jpg
 Фото опубликовано: images/apod/apod_14.jpg
 ```
 
