@@ -4,7 +4,7 @@ import requests
 from decouple import config
 from pathlib import Path
 
-from fetch_images_helper import fetch_photos
+from download_utils import fetch_photos
 
 
 def create_parser():

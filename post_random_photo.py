@@ -5,7 +5,7 @@ import random
 from decouple import config
 import telegram
 
-from post_helper import collect_file_paths, publish_single_photo
+from publish_utils import collect_file_paths, publish_single_photo
 
 
 def create_parser():

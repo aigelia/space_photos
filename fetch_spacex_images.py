@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 import requests
 
-from fetch_images_helper import fetch_photos
+from download_utils import fetch_photos
 
 
 def create_parser():

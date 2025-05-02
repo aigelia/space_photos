@@ -4,7 +4,7 @@ from time import sleep
 from decouple import config
 import telegram
 
-from post_helper import collect_file_paths, publish_single_photo, shuffle_file_paths
+from publish_utils import collect_file_paths, publish_single_photo, shuffle_file_paths
 
 
 def create_parser():
