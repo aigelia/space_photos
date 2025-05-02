@@ -20,12 +20,17 @@ def create_parser():
     return parser
 
 
-def post_photos(bot, chat_id, post_interval, file_paths):
+def post_photos(bot, chat_id, post_interval):
     while True:
         file_paths = collect_file_paths()
         file_paths = shuffle_file_paths(file_paths)
         for file_path in file_paths:
-            publish_single_photo(bot, chat_id, file_path)
+            try:
+                publish_single_photo(bot, chat_id, file_path)
+            except telegram.error.NetworkError:
+                print("Ошибка подключения. Повторная попытка через 15 секунд...")
+                sleep(15)
+                continue
             sleep(post_interval)
 
 
@@ -37,9 +42,7 @@ def main():
     bot = telegram.Bot(token=tg_token)
     sleeptime_hours = args.sleeptime if args.sleeptime is not None else 4
     post_interval = sleeptime_hours * 3600
-    file_paths = collect_file_paths()
-    file_paths = shuffle_file_paths(file_paths)
-    post_photos(bot, chat_id, post_interval, file_paths)
+    post_photos(bot, chat_id, post_interval)
 
 
 if __name__ == "__main__":
