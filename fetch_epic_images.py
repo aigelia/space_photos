@@ -28,22 +28,21 @@ def get_epic_photos(nasa_token, count):
     """Создает список ссылок на указанное количество фото NASA EPIC."""
     week_ago = datetime.today() - timedelta(days=7)
     date = week_ago.strftime("%Y-%m-%d")
+    year, month, day = date.split("-")
     epic_url = f"https://api.nasa.gov/EPIC/api/natural/date/{date}"
-    params = {
-        "api_key": nasa_token
-    }
+    params = {"api_key": nasa_token}
     response = requests.get(epic_url, params=params)
     response.raise_for_status()
     data = response.json()
     result = []
     for item in data[:count]:
-        image_name = item["image"]
-        base_url = f"https://api.nasa.gov/EPIC/archive/natural/{date[:4]}/{date[5:7]}/{date[8:10]}/png/{image_name}.png"
-        params = {
-            "api_key": nasa_token
-        }
+        image_name = item.get("image")
+        if not image_name:
+            continue
+        base_url = f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{image_name}.png"
         image_url = f"{base_url}?{urlencode(params)}"
         result.append(image_url)
+
     return result
 
 
