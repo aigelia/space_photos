@@ -8,7 +8,7 @@ import telegram
 from post_helper import collect_file_paths, publish_single_photo
 
 
-def main():
+def create_parser():
     parser = argparse.ArgumentParser(
         description="Публикует указанную или случайную фотографию в Telegram"
     )
@@ -16,22 +16,16 @@ def main():
         "--filepath",
         help="Путь к конкретной фотографии. Если не указан — будет выбрана случайная."
     )
-    args = parser.parse_args()
+    return parser
 
+
+def main():
+    parser = create_parser()
+    args = parser.parse_args()
     tg_token = config("TG_TOKEN")
     chat_id = config("TG_CHAT_ID")
     bot = telegram.Bot(token=tg_token)
-    if args.filepath:
-        file_path = args.filepath
-        if not os.path.isfile(file_path):
-            print(f"Файл не найден: {file_path}")
-            return
-    else:
-        file_paths = collect_file_paths(shuffle_result=False)
-        if not file_paths:
-            print("В папке 'images' нет изображений.")
-            return
-        file_path = random.choice(file_paths)
+    file_path = args.filepath or random.choice(collect_file_paths())
     publish_single_photo(bot, chat_id, file_path)
     print(f"Фото опубликовано: {file_path}")
 

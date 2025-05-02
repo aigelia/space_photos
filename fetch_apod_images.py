@@ -9,7 +9,7 @@ from fetch_images_helper import fetch_photos
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        description="""Утилита для скачивания фото NASA APOD"""
+        description="Утилита для скачивания фото NASA APOD"
     )
     parser.add_argument(
         "--count",
@@ -21,8 +21,9 @@ def create_parser():
     )
     return parser
 
-def get_apod_photos(nasa_token, count):
-    """Создает список ссылок на указанное количество случайных фото NASA APOD."""
+
+def fetch_apod_data(nasa_token, count):
+    """Отправляет запрос к API NASA APOD и возвращает JSON с данными о фото."""
     apod_url = "https://api.nasa.gov/planetary/apod"
     params = {
         "api_key": nasa_token,
@@ -30,22 +31,27 @@ def get_apod_photos(nasa_token, count):
     }
     response = requests.get(apod_url, params=params)
     response.raise_for_status()
-    data = response.json()
+    return response.json()
+
+
+def get_apod_photos(data):
+    """Извлекает список ссылок на изображения (исключая видео)."""
     result = []
     for item in data:
-        photo = item["url"]
-        result.append(photo)
+        if item.get("media_type") == "image":
+            result.append(item["url"])
     return result
 
 
 def main():
     parser = create_parser()
     args = parser.parse_args()
-    count = args.count if args.count else "10"
+    count = int(args.count) if args.count else 10
     images_dir = Path(args.folder) if args.folder else Path("images")
     images_dir.mkdir(exist_ok=True)
     nasa_token = config("NASA_TOKEN")
-    apod_photos = get_apod_photos(nasa_token, count)
+    data = fetch_apod_data(nasa_token, count)
+    apod_photos = get_apod_photos(data)
     fetch_photos(apod_photos, images_dir, "apod")
     print("Фото от NASA APOD сохранены!")
 
