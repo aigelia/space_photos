@@ -21,16 +21,12 @@ def create_parser():
 
 
 def post_photos(bot, chat_id, post_interval, file_paths):
-    current_index = 0
     while True:
-        if current_index >= len(file_paths):
-            file_paths = collect_file_paths()
-            file_paths = shuffle_file_paths(file_paths)
-            current_index = 0
-        file_path = file_paths[current_index]
-        publish_single_photo(bot, chat_id, file_path)
-        current_index += 1
-        sleep(post_interval)
+        file_paths = collect_file_paths()
+        file_paths = shuffle_file_paths(file_paths)
+        for file_path in file_paths:
+            publish_single_photo(bot, chat_id, file_path)
+            sleep(post_interval)
 
 
 def main():
