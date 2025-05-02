@@ -7,7 +7,7 @@
 Понадобится установленный Python версии 3.10 или ниже (например, 3.9). Скрипты не гарантированно совместимы с Python 3.11+; также следует установить используемые скриптами библиотеки. Это можно сделать через терминал с помощью команды:
 
 ```shell
-MacBook-Air-7:space_photos user$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 Далее необходимо создать файл `.env` в директории проекта и поместить в него все необходимые данные:
@@ -26,7 +26,7 @@ MacBook-Air-7:space_photos user$ pip install -r requirements.txt
 Скрипт будет работать до тех пор, пока его не остановят вручную: опубликовав все фото из директории, он будет публиковать их снова в случайном порядке. По умолчанию периодичность публикации — один раз в четыре часа, однако при запуске можно указать конкретную периодичность, используя дополнительный аргумент `--sleeptime`, например, для публикации раз в час:
 
 ```bash
-MacBook-Air-7:space_photos user$ python3 post_on_telegram.py --sleeptime 1
+python3 post_on_telegram.py --sleeptime 1
 ```
 
 ### `post_random_photo.py` ###
@@ -34,7 +34,7 @@ MacBook-Air-7:space_photos user$ python3 post_on_telegram.py --sleeptime 1
 Скрипт `post_random_photo.py` публикует **одно изображение** в Telegram-канал. При запуске вы можете указать конкретный файл через аргумент `--filepath`:
 
 ```bash
-MacBook-Air-7:space_photos user$ python3 post_random_photo.py --filepath images/apod/apod_14.jpg
+space_photos user$ python3 post_random_photo.py --filepath images/apod/apod_14.jpg
 Фото опубликовано: images/apod/apod_14.jpg
 ```
 
@@ -45,7 +45,7 @@ MacBook-Air-7:space_photos user$ python3 post_random_photo.py --filepath images/
 В директории содержатся еще три скрипта для скачивания фотографий через API, которые также могут быть настроены под потребности конкретного пользователя. Каждый из них создает свой каталог для скачивания изображений в директории images, а при отсутствии images - создает и ее. Во всех трех скриптах вы можете использовать необязательные аргументы `--folder` (позволяет указать директорию для сохранения изображений, по умлочанию это images) и `--count` (регулирует количество загружаемых изображений, по умлочанию - 10 штук):
 
 ```shell
-MacBook-Air-7:space_photos user$ python3 fetch_spacex_images.py --folder test --count 100
+python3 fetch_spacex_images.py --folder test --count 100
 Фото от SpaceX сохранены!
 ```
 
@@ -54,13 +54,13 @@ MacBook-Air-7:space_photos user$ python3 fetch_spacex_images.py --folder test --
 Позволяет скачать фото различных запусков космических кораблей SpaceX. API не требует специального ключа. Запустить скрипт можно через терминал, указав при этом в качестве необязательного аргумента `--launch_id` ID запуска, который вас интересует, например:
 
 ```shell
-MacBook-Air-7:space_photos user$ python3 fetch_spacex_images.py --launch_id 5eb87d47ffd86e000604b38a
+python3 fetch_spacex_images.py --launch_id 5eb87d47ffd86e000604b38a
 ```
 
 Если аргумент не будет указан, либо будет указан неверно, скрипт по умолчанию скачает фотографии, сделанные при последнем запуске SpaceX.
 
 ```shell
-MacBook-Air-7:space_photos user$ python3 fetch_spacex_images.py --launch_id 5eb87d47ffd86e000604b38a
+python3 fetch_spacex_images.py --launch_id 5eb87d47ffd86e000604b38a
 Вы указали неверный ID '5eb87d47ffd86e000604b38a'. Скачиваем фото последнего запуска...
 Фото от SpaceX сохранены!
 ```
@@ -70,7 +70,7 @@ MacBook-Air-7:space_photos user$ python3 fetch_spacex_images.py --launch_id 5eb8
 Скрипт позволяет автоматически скачивать случайные изображения проекта Astronomy Picture of the Day (APOD) NASA. Это число можно менять, немного отредактировав функцию `get_apod_photos()` - замените параметр значение ключа "count" в словаре с параметрами "params" внутри функции, указав нужное вам количество фото. Для работы скрипта требуется API-ключ NASA.
 
 ```shell
-MacBook-Air-7:space_photos user$ python3 fetch_apod_images.py
+python3 fetch_apod_images.py
 Фото от NASA APOD сохранены!
 ```
 
@@ -80,7 +80,7 @@ MacBook-Air-7:space_photos user$ python3 fetch_apod_images.py
 (EPIC). По умолчанию скачиваются 10 фото планеты, сделанные за неделю до сегодняшней даты. По желанию можно внести небольшие изменения в первую строку функции `get_epic_photos()`, чтобы получить более "свежие" или более "архивные" фото. Например, если вместо `days=7` указать `days=1`, мы получим вчерашние снимки (при условии, что они есть на сервере). 
 
 ```shell
-MacBook-Air-7:space_photos user$ python3 fetch_epic_images.py
+python3 fetch_epic_images.py
 Фото от NASA EPIC сохранены!
 ```
 
