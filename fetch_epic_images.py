@@ -1,6 +1,7 @@
 import argparse
 from datetime import datetime, timedelta
 import requests
+from urllib.parse import urlencode
 
 from decouple import config
 from pathlib import Path
@@ -35,9 +36,13 @@ def get_epic_photos(nasa_token, count):
     response.raise_for_status()
     data = response.json()
     result = []
-    for item in data[:count]:  # Ограничиваем до 10 фото
+    for item in data[:count]:
         image_name = item["image"]
-        image_url = f"https://api.nasa.gov/EPIC/archive/natural/{date[:4]}/{date[5:7]}/{date[8:10]}/png/{image_name}.png?api_key={nasa_token}"
+        base_url = f"https://api.nasa.gov/EPIC/archive/natural/{date[:4]}/{date[5:7]}/{date[8:10]}/png/{image_name}.png"
+        params = {
+            "api_key": nasa_token
+        }
+        image_url = f"{base_url}?{urlencode(params)}"
         result.append(image_url)
     return result
 
