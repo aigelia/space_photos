@@ -34,31 +34,37 @@ def get_epic_date():
     return week_ago.strftime("%Y-%m-%d")
 
 
-def fetch_epic_data(date, nasa_token):
+def fetch_epic_data(date_str, nasa_token):
     """Делает запрос к NASA EPIC API и возвращает JSON-данные."""
-    epic_url = f"https://api.nasa.gov/EPIC/api/natural/date/{date}"
+    epic_url = f"https://api.nasa.gov/EPIC/api/natural/date/{date_str}"
     params = {"api_key": nasa_token}
     response = requests.get(epic_url, params=params)
     response.raise_for_status()
     return response.json()
 
 
-def build_epic_image_urls(data, date, count, nasa_token):
+def build_epic_image_urls(data, date_str, count, nasa_token):
     """Создаёт список ссылок на изображения по данным EPIC."""
-    year, month, day = date.split("-")
-    params = {
-        "api_key": nasa_token
-    }
+    date = datetime.strptime(date_str, "%Y-%m-%d")
+    params = {"api_key": nasa_token}
     result = []
+
     for item in data[:count]:
         image_name = item.get("image")
         if not image_name:
             continue
-        base_url = f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{image_name}.png"
-        final_url = PreparedRequest()
-        final_url.prepare_url(base_url, params)
-        image_url = final_url.url
+
+        base_url = (
+            f"https://api.nasa.gov/EPIC/archive/natural/"
+            f"{date.year}/{date.month:02}/{date.day:02}/png/{image_name}.png"
+        )
+
+        prepared = PreparedRequest()
+        prepared.prepare_url(base_url, params)
+        image_url = prepared.url
+
         result.append(image_url)
+
     return result
 
 
@@ -69,9 +75,9 @@ def main():
     images_dir = args.folder
     images_dir.mkdir(exist_ok=True)
     nasa_token = config("NASA_TOKEN")
-    date = get_epic_date()
-    data = fetch_epic_data(date, nasa_token)
-    epic_photos = build_epic_image_urls(data, date, count, nasa_token)
+    date_str = get_epic_date()
+    data = fetch_epic_data(date_str, nasa_token)
+    epic_photos = build_epic_image_urls(data, date_str, count, nasa_token)
     fetch_photos(epic_photos, images_dir, "epic")
     print("Фото от NASA EPIC сохранены!")
 
