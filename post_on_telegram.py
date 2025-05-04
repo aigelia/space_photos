@@ -14,8 +14,8 @@ def create_parser():
     parser.add_argument(
         "--sleeptime",
         type=int,
-        default=None,
-        help="Задержка между публикациями в часах"
+        default=3600 * 4,
+        help="Задержка между публикациями в секундах (по умолчанию 4 часа)"
     )
     parser.add_argument(
         "--folder",
@@ -29,12 +29,13 @@ def post_photos(bot, chat_id, post_interval, directory):
     while True:
         file_paths = collect_file_paths(directory)
         file_paths = shuffle_file_paths(file_paths)
+
         for file_path in file_paths:
             try:
                 publish_single_photo(bot, chat_id, file_path)
             except telegram.error.NetworkError:
-                print("Ошибка подключения. Повторная попытка через 15 секунд...")
-                sleep(15)
+                print("Сетевая ошибка. Ждём 30 секунд перед повтором.")
+                sleep(30)
                 continue
             sleep(post_interval)
 
@@ -45,8 +46,7 @@ def main():
     tg_token = config("TG_TOKEN")
     chat_id = config("TG_CHAT_ID")
     bot = telegram.Bot(token=tg_token)
-    sleeptime_hours = args.sleeptime if args.sleeptime is not None else 4
-    post_interval = sleeptime_hours * 3600
+    post_interval = args.sleeptime
     directory = args.folder
     post_photos(bot, chat_id, post_interval, directory)
 

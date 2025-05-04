@@ -11,10 +11,14 @@ def create_parser():
     )
     parser.add_argument(
         "--launch_id",
+        type=str,
+        default="latest",
         help="ID запуска SpaceX для скачивания фото"
     )
     parser.add_argument(
         "--folder",
+        type=Path,
+        default="images",
         help="Директория для сохранения изображений"
     )
     parser.add_argument(
@@ -60,9 +64,9 @@ def get_spacex_photos(launch_id, count):
 def main():
     parser = create_parser()
     args = parser.parse_args()
-    launch_id = args.launch_id or "latest"
+    launch_id = args.launch_id
     count = args.count
-    images_dir = Path(args.folder) if args.folder else Path("images")
+    images_dir = args.folder
     images_dir.mkdir(parents=True, exist_ok=True)
     try:
         spacex_photos = get_spacex_photos(launch_id, count)

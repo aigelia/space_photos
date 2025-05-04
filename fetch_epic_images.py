@@ -15,10 +15,14 @@ def create_parser():
     )
     parser.add_argument(
         "--count",
+        type=int,
+        default=10,
         help="Количество фото для скачивания"
     )
     parser.add_argument(
         "--folder",
+        type=Path,
+        default="images",
         help="Директория для сохранения изображений"
     )
     return parser
@@ -57,8 +61,8 @@ def build_epic_image_urls(data, date, count, nasa_token):
 def main():
     parser = create_parser()
     args = parser.parse_args()
-    count = int(args.count) if args.count else 10
-    images_dir = Path(args.folder) if args.folder else Path("images")
+    count = args.count
+    images_dir = args.folder
     images_dir.mkdir(exist_ok=True)
     nasa_token = config("NASA_TOKEN")
     date = get_epic_date()
