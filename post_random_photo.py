@@ -16,6 +16,11 @@ def create_parser():
         "--filepath",
         help="Путь к конкретной фотографии. Если не указан — будет выбрана случайная."
     )
+    parser.add_argument(
+        "--folder",
+        default="images",
+        help="Директория, из которой будет выбрано случайное изображение"
+    )
     return parser
 
 
@@ -25,7 +30,8 @@ def main():
     tg_token = config("TG_TOKEN")
     chat_id = config("TG_CHAT_ID")
     bot = telegram.Bot(token=tg_token)
-    file_path = args.filepath or random.choice(collect_file_paths())
+    file_paths = collect_file_paths(args.folder)
+    file_path = args.filepath or random.choice(file_paths)
     publish_single_photo(bot, chat_id, file_path)
     print(f"Фото опубликовано: {file_path}")
 

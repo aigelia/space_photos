@@ -2,7 +2,7 @@ import os
 import random
 
 
-def collect_file_paths(directory="images"):
+def collect_file_paths(directory):
     """Собирает пути ко всем файлам из указанной директории и её поддиректорий."""
     file_paths = []
     for root, dirs, files in os.walk(directory):

@@ -17,12 +17,17 @@ def create_parser():
         default=None,
         help="Задержка между публикациями в часах"
     )
+    parser.add_argument(
+        "--folder",
+        default="images",
+        help="Директория с изображениями для публикации"
+    )
     return parser
 
 
-def post_photos(bot, chat_id, post_interval):
+def post_photos(bot, chat_id, post_interval, directory):
     while True:
-        file_paths = collect_file_paths()
+        file_paths = collect_file_paths(directory)
         file_paths = shuffle_file_paths(file_paths)
         for file_path in file_paths:
             try:
@@ -42,7 +47,8 @@ def main():
     bot = telegram.Bot(token=tg_token)
     sleeptime_hours = args.sleeptime if args.sleeptime is not None else 4
     post_interval = sleeptime_hours * 3600
-    post_photos(bot, chat_id, post_interval)
+    directory = args.folder
+    post_photos(bot, chat_id, post_interval, directory)
 
 
 if __name__ == "__main__":
