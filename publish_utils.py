@@ -1,5 +1,4 @@
 import os
-import random
 
 
 def collect_file_paths(directory):
@@ -9,12 +8,6 @@ def collect_file_paths(directory):
         for file in files:
             full_path = os.path.join(root, file)
             file_paths.append(full_path)
-    return file_paths
-
-
-def shuffle_file_paths(file_paths):
-    """Перемешивает список путей к файлам."""
-    random.shuffle(file_paths)
     return file_paths
 
 

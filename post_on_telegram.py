@@ -1,10 +1,11 @@
 import argparse
+import random
 from time import sleep
 
 from decouple import config
 import telegram
 
-from publish_utils import collect_file_paths, publish_single_photo, shuffle_file_paths
+from publish_utils import collect_file_paths, publish_single_photo
 
 
 def create_parser():
@@ -28,8 +29,7 @@ def create_parser():
 def post_photos(bot, chat_id, post_interval, directory):
     while True:
         file_paths = collect_file_paths(directory)
-        file_paths = shuffle_file_paths(file_paths)
-
+        random.shuffle(file_paths)
         for file_path in file_paths:
             try:
                 publish_single_photo(bot, chat_id, file_path)
