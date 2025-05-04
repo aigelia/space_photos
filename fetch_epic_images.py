@@ -1,7 +1,7 @@
 import argparse
 from datetime import datetime, timedelta
 import requests
-from urllib.parse import urlencode
+from requests.models import PreparedRequest
 
 from decouple import config
 from pathlib import Path
@@ -46,14 +46,18 @@ def fetch_epic_data(date, nasa_token):
 def build_epic_image_urls(data, date, count, nasa_token):
     """Создаёт список ссылок на изображения по данным EPIC."""
     year, month, day = date.split("-")
-    params = {"api_key": nasa_token}
+    params = {
+        "api_key": nasa_token
+    }
     result = []
     for item in data[:count]:
         image_name = item.get("image")
         if not image_name:
             continue
         base_url = f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{image_name}.png"
-        image_url = f"{base_url}?{urlencode(params)}"
+        final_url = PreparedRequest()
+        final_url.prepare_url(base_url, params)
+        image_url = final_url.url
         result.append(image_url)
     return result
 
