@@ -1,8 +1,8 @@
-# Just Space: Download NASA and SpaceX Photos and Publish Them to Telegram
+# Just Space: Download NASA and SpaceX Photos and Publish Them to Telegram # 
 
 **Just Space** is a collection of scripts that automate the downloading of photos from NASA and SpaceX, as well as publishing them to Telegram channels. Each script can be used independently. Here's how it works.
 
-## Installation
+## Installation ##
 
 You'll need Python 3.10 or lower (e.g., 3.9). The scripts are not guaranteed to work with Python 3.11+. To install required libraries, run:
 
@@ -18,7 +18,7 @@ Then, create a `.env` file in the root project directory and add the following k
 
 ## Automatic Photo Posting
 
-### `post_on_telegram.py`
+### `post_on_telegram.py` ###
 
 This script publishes photos from any subdirectory inside the `images` directory. You can manually add images to this directory or use one of the fetching scripts below to populate it automatically.
 
@@ -30,7 +30,15 @@ Photos will be posted in a loop. Once all images have been published, the script
 python3 post_on_telegram.py --sleeptime 3600
 ```
 
-### `post_random_photo.py`
+Также можно указать, откуда брать изображения, с помощью аргумента `--directory`. По умолчанию используется директория `images`.
+
+Пример:
+
+```shell
+python3 post_on_telegram.py --directory my_images --sleeptime 3600
+```
+
+### `post_random_photo.py` ###
 
 This script publishes a single photo to your Telegram channel. You can specify a file directly via the `--filepath` argument:
 
@@ -39,9 +47,13 @@ python3 post_random_photo.py --filepath images/apod/apod_14.jpg
 Photo published to Telegram: images/apod/apod_14.jpg
 ```
 
-If no path is provided, it will select a random image from the `images` folder and its subdirectories.
+If no path is provided, it will select a random image from the `images` folder and its subdirectories. You can also specify a directory from which a random photo will be selected:
 
-## Downloading Space Photos from NASA and SpaceX APIs
+```shell
+python3 post_random_photo.py --directory my_images
+```
+
+## Downloading Space Photos from NASA and SpaceX APIs ##
 
 The project includes three scripts for downloading images from public APIs. Each script saves images to a subdirectory inside `images`, creating the `images` directory if it doesn’t exist.
 
@@ -57,7 +69,7 @@ python3 fetch_spacex_images.py --folder test --count 100
 SpaceX images saved!
 ```
 
-### `fetch_spacex_images.py`
+### `fetch_spacex_images.py` ###
 
 Downloads images from a specific SpaceX launch. You can specify a `--launch_id`, or omit it to get images from the latest launch:
 
@@ -72,7 +84,7 @@ Invalid launch ID '5eb87d47ffd86e000604b38a'. Fetching images from the latest la
 SpaceX images saved!
 ```
 
-### `fetch_apod_images.py`
+### `fetch_apod_images.py` ###
 
 Fetches random images from NASA's Astronomy Picture of the Day (APOD) API. Requires a NASA API token.
 
@@ -81,7 +93,7 @@ python3 fetch_apod_images.py
 NASA APOD images saved!
 ```
 
-### `fetch_epic_images.py`
+### `fetch_epic_images.py` ###
 
 Fetches images from NASA’s Earth Polychromatic Imaging Camera (EPIC). By default, it gets 10 photos from 7 days ago. You can adjust the date logic in the function if needed.
 
@@ -90,22 +102,22 @@ python3 fetch_epic_images.py
 NASA EPIC images saved!
 ```
 
-## Utility Modules
+## Utility Modules ##
 
-### `download_utils.py`
+### `download_utils.py` ###
 
 Provides shared functionality for downloading photos from all APIs. Includes:
 
 * `fetch_photos()` — downloads all images from a list
 * `check_file_extension()` — detects file type from a URL
 
-### `publish_utils.py`
+### `publish_utils.py` ###
 
 Includes helper functions for Telegram publishing:
 
 * `collect_file_paths()` — recursively gathers image paths from a folder
 * `publish_single_photo()` — sends a photo to a Telegram channel using the bot API
 
-## Project Purpose
+## Project Purpose ##
 
 This project was created for educational purposes as part of the web development course at [dvmn.org](https://dvmn.org).
