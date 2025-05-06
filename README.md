@@ -1,95 +1,111 @@
-# Это "Просто космос". Скачивайте фотографии NASA и SpaceX и публикуйте их в Telegram #
+# Just Space: Download NASA and SpaceX Photos and Publish Them to Telegram
 
-"Просто космос" - это набор скриптов, автоматизирующих публикацию фото в Telegram-каналы, а также скачивание фотографий запусков SpaceX и снимков двух сервисов NASA для последующей публикации. Каждый из скриптов может использоваться независимо от остальных. Как это работает?
+**Just Space** is a collection of scripts that automate the downloading of photos from NASA and SpaceX, as well as publishing them to Telegram channels. Each script can be used independently. Here's how it works.
 
-## Установка ##
+## Installation
 
-Понадобится установленный Python версии 3.10 или ниже (например, 3.9). Скрипты не гарантированно совместимы с Python 3.11+; также следует установить используемые скриптами библиотеки. Это можно сделать через терминал с помощью команды:
+You'll need Python 3.10 or lower (e.g., 3.9). The scripts are not guaranteed to work with Python 3.11+. To install required libraries, run:
 
-```shell
+```bash
 pip install -r requirements.txt
 ```
 
-Далее необходимо создать файл `.env` в директории проекта и поместить в него все необходимые данные:
-1) `NASA_TOKEN=...`, где будет указан ключ NASA API, который можно получить на [официальном сайте](https://api.nasa.gov) (регистрация не требуется).
-2) `TG_TOKEN=...`, где будет указан API-ключ Telegram-бота, который можно получить с помощью [BotFather](https://telegram.me/BotFather), следуя простым инструкциям по созданию бота (потребуется аккаунт в Telegram).
-3) `TG_CHAT_ID=...`, где будет указан идентификатор Telegram-канала, в котором вы будете публиковать фото с помощью скрипта. Идентификатор - это по сути то же, что и ваш никнейм, он выглядит вот так: `@example`. 
+Then, create a `.env` file in the root project directory and add the following keys:
 
-## Автоматическая публикация фото ##
+1. `NASA_TOKEN=...` – your NASA API key, which can be obtained [here](https://api.nasa.gov) (no registration required).
+2. `TG_TOKEN=...` – your Telegram bot token, which you can generate using [BotFather](https://telegram.me/BotFather).
+3. `TG_CHAT_ID=...` – your Telegram channel ID (usually looks like `@yourchannelname`).
 
-### `post_on_telegram.py` ###
+## Automatic Photo Posting
 
-Скрипт `post_on_telegram.py` позволяет автоматически публиковать фото из любых директорий, находящихся в директории `images`. Вы можете создать директорию с таким именем самостоятельно и добавить в нее любые изображения, либо запустить любой из других скриптов, описанных ниже, для автоматизации скачивания изображений — тогда `images`, если её ещё нет, будет создана автоматически.
+### `post_on_telegram.py`
 
-Для работы скрипта необходим API-ключ бота, а также идентификатор канала, в который будут осуществляться публикации. **Перед запуском убедитесь в том, что ваш бот добавлен в канал и имеет права администратора.**
+This script publishes photos from any subdirectory inside the `images` directory. You can manually add images to this directory or use one of the fetching scripts below to populate it automatically.
 
-Скрипт будет работать до тех пор, пока его не остановят вручную: опубликовав все фото из директории, он будет публиковать их снова в случайном порядке. По умолчанию периодичность публикации — один раз в четыре часа, однако при запуске можно указать конкретную периодичность, используя дополнительный аргумент `--sleeptime`, например, для публикации раз в час:
+**Important:** Make sure your Telegram bot is added to the channel and has admin permissions before running the script.
+
+Photos will be posted in a loop. Once all images have been published, the script will reshuffle and start over. By default, it posts every 4 hours. You can change this interval using the `--sleeptime` argument (in seconds). For example, to post every hour:
 
 ```bash
-python3 post_on_telegram.py --sleeptime 1
+python3 post_on_telegram.py --sleeptime 3600
 ```
 
-### `post_random_photo.py` ###
+### `post_random_photo.py`
 
-Скрипт `post_random_photo.py` публикует **одно изображение** в Telegram-канал. При запуске вы можете указать конкретный файл через аргумент `--filepath`:
+This script publishes a single photo to your Telegram channel. You can specify a file directly via the `--filepath` argument:
 
 ```bash
 python3 post_random_photo.py --filepath images/apod/apod_14.jpg
-Фото опубликовано: images/apod/apod_14.jpg
+Photo published to Telegram: images/apod/apod_14.jpg
 ```
 
-Если аргумент не указан, будет выбрано случайное изображение из всех файлов, находящихся в директории `images` и её подкаталогах. 
+If no path is provided, it will select a random image from the `images` folder and its subdirectories.
 
-## Скачивание фото космоса через API NASA и SpaceX ##
+## Downloading Space Photos from NASA and SpaceX APIs
 
-В директории содержатся еще три скрипта для скачивания фотографий через API, которые также могут быть настроены под потребности конкретного пользователя. Каждый из них создает свой каталог для скачивания изображений в директории images, а при отсутствии images - создает и ее. Во всех трех скриптах вы можете использовать необязательные аргументы `--folder` (позволяет указать директорию для сохранения изображений, по умлочанию это images) и `--count` (регулирует количество загружаемых изображений, по умлочанию - 10 штук):
+The project includes three scripts for downloading images from public APIs. Each script saves images to a subdirectory inside `images`, creating the `images` directory if it doesn’t exist.
 
-```shell
+All three scripts support the following optional arguments:
+
+* `--folder`: directory to save images (default: `images`)
+* `--count`: number of images to download (default: `10`)
+
+Example:
+
+```bash
 python3 fetch_spacex_images.py --folder test --count 100
-Фото от SpaceX сохранены!
+SpaceX images saved!
 ```
 
-### `fetch_spacex_images.py` ###
+### `fetch_spacex_images.py`
 
-Позволяет скачать фото различных запусков космических кораблей SpaceX. API не требует специального ключа. Запустить скрипт можно через терминал, указав при этом в качестве необязательного аргумента `--launch_id` ID запуска, который вас интересует, например:
+Downloads images from a specific SpaceX launch. You can specify a `--launch_id`, or omit it to get images from the latest launch:
 
-```shell
+```bash
 python3 fetch_spacex_images.py --launch_id 5eb87d47ffd86e000604b38a
 ```
 
-Если аргумент не будет указан, либо будет указан неверно, скрипт по умолчанию скачает фотографии, сделанные при последнем запуске SpaceX.
+If the ID is invalid or not provided:
 
-```shell
-python3 fetch_spacex_images.py --launch_id 5eb87d47ffd86e000604b38a
-Вы указали неверный ID '5eb87d47ffd86e000604b38a'. Скачиваем фото последнего запуска...
-Фото от SpaceX сохранены!
+```bash
+Invalid launch ID '5eb87d47ffd86e000604b38a'. Fetching images from the latest launch...
+SpaceX images saved!
 ```
 
-### `fetch_apod_images.py` ###
+### `fetch_apod_images.py`
 
-Скрипт позволяет автоматически скачивать случайные изображения проекта Astronomy Picture of the Day (APOD) NASA. Это число можно менять, немного отредактировав функцию `get_apod_photos()` - замените параметр значение ключа "count" в словаре с параметрами "params" внутри функции, указав нужное вам количество фото. Для работы скрипта требуется API-ключ NASA.
+Fetches random images from NASA's Astronomy Picture of the Day (APOD) API. Requires a NASA API token.
 
-```shell
+```bash
 python3 fetch_apod_images.py
-Фото от NASA APOD сохранены!
+NASA APOD images saved!
 ```
 
-### `fetch_epic_images.py` ###
+### `fetch_epic_images.py`
 
-Еще один скрипт, работающий с NASA API, а конкретно - с Earth Polychromatic Imaging Camera
-(EPIC). По умолчанию скачиваются 10 фото планеты, сделанные за неделю до сегодняшней даты. По желанию можно внести небольшие изменения в первую строку функции `get_epic_photos()`, чтобы получить более "свежие" или более "архивные" фото. Например, если вместо `days=7` указать `days=1`, мы получим вчерашние снимки (при условии, что они есть на сервере). 
+Fetches images from NASA’s Earth Polychromatic Imaging Camera (EPIC). By default, it gets 10 photos from 7 days ago. You can adjust the date logic in the function if needed.
 
-```shell
+```bash
 python3 fetch_epic_images.py
-Фото от NASA EPIC сохранены!
+NASA EPIC images saved!
 ```
 
-## Вспомогательные модули ##
+## Utility Modules
 
-### `fetch_images_helper.py` ###
+### `download_utils.py`
 
-В директории также хранится модуль `fetch_images_helper.py`, без которого все три скрипта для скачивания фото через API не будут работать. Он содержит общую функцию для скачивания фото по ссылкам из списков, формируемых основным кодом, а также небольшую функцию для определения расширения файла.
+Provides shared functionality for downloading photos from all APIs. Includes:
 
-### `post_helper.py` ####
+* `fetch_photos()` — downloads all images from a list
+* `check_file_extension()` — detects file type from a URL
 
-Этот модуль содержит функции, необходимые для работы кода, публикующего фото через Telegram API; в нем находятся функция, которая собирает пути ко всем изображениям из директории images и её подкаталогов. По умолчанию перемешивает список, но это поведение можно отключить, `передав shuffle_result=False`. Также в модуле находится функция, которая отправляет в Telegram-канал одну фотографию по переданному пути.
+### `publish_utils.py`
+
+Includes helper functions for Telegram publishing:
+
+* `collect_file_paths()` — recursively gathers image paths from a folder
+* `publish_single_photo()` — sends a photo to a Telegram channel using the bot API
+
+## Project Purpose
+
+This project was created for educational purposes as part of the web development course at [dvmn.org](https://dvmn.org).

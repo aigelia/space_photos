@@ -10,18 +10,18 @@ from publish_utils import collect_file_paths, publish_single_photo
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        description="Скрипт для автоматической публикации фото в Telegram"
+        description="Script for automatically posting images to a Telegram channel"
     )
     parser.add_argument(
         "--sleeptime",
         type=int,
         default=3600 * 4,
-        help="Задержка между публикациями в секундах (по умолчанию 4 часа)"
+        help="Delay between posts in seconds (default is 4 hours)"
     )
     parser.add_argument(
         "--folder",
         default="images",
-        help="Директория с изображениями для публикации"
+        help="Directory with images to post"
     )
     return parser
 
@@ -34,7 +34,7 @@ def post_photos(bot, chat_id, post_interval, directory):
             try:
                 publish_single_photo(bot, chat_id, file_path)
             except telegram.error.NetworkError:
-                print("Сетевая ошибка. Ждём 30 секунд перед повтором.")
+                print("Network error. Waiting 30 seconds before retrying.")
                 sleep(30)
                 continue
             sleep(post_interval)

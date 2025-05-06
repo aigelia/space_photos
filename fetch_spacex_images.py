@@ -7,42 +7,40 @@ from download_utils import fetch_photos
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        description="Утилита для скачивания фото запусков SpaceX"
+        description="Utility for downloading images from SpaceX launches"
     )
     parser.add_argument(
         "--launch_id",
         type=str,
         default="latest",
-        help="ID запуска SpaceX для скачивания фото"
+        help="SpaceX launch ID to download images from"
     )
     parser.add_argument(
         "--folder",
         type=Path,
         default="images",
-        help="Директория для сохранения изображений"
+        help="Directory to save images"
     )
     parser.add_argument(
         "--count",
         type=int,
         default=10,
-        help="Количество фотографий для скачивания (по умолчанию 10)"
+        help="Number of images to download (default is 10)"
     )
     return parser
 
 
 def get_all_data(launch_id):
-    """Отправляет запрос к API SpaceX и возвращает JSON с данными о запуске."""
+    """Sends a request to the SpaceX API and returns launch data in JSON."""
     url = "https://api.spacexdata.com/v5/launches/"
-    params = {
-        "id": launch_id
-    }
+    params = {"id": launch_id}
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()
 
 
 def get_photo_urls(launch_data):
-    """Получает нужные фото из данных о запусках."""
+    """Extracts photo URLs from the launch data."""
     photo_urls = []
     for item in launch_data:
         links = item.get("links", {})
@@ -53,10 +51,10 @@ def get_photo_urls(launch_data):
 
 
 def get_spacex_photos(launch_id, count):
-    """Создает список ссылок на указанное число фото запуска SpaceX."""
+    """Returns a list of photo URLs for the given SpaceX launch."""
     data = get_all_data(launch_id)
     if launch_id != "latest" and data[0]["id"] != launch_id:
-        print(f"Вы указали неверный ID '{launch_id}'. Скачиваем фото последнего запуска...")
+        print(f"Invalid launch ID '{launch_id}'. Fetching images from the latest launch...")
     all_photos = get_photo_urls(data)
     return all_photos[:count]
 
@@ -72,13 +70,13 @@ def main():
         spacex_photos = get_spacex_photos(launch_id, count)
         if spacex_photos:
             fetch_photos(spacex_photos, images_dir, "spacex")
-            print("Фото от SpaceX сохранены!")
+            print("SpaceX images saved!")
         else:
-            print(f"Не удалось получить фотографии для запуска с ID: {launch_id}")
+            print(f"No images found for launch ID: {launch_id}")
     except requests.exceptions.RequestException as e:
-        print(f"Ошибка при запросе к API: {e}")
+        print(f"API request error: {e}")
     except Exception as e:
-        print(f"Произошла неожиданная ошибка: {e}")
+        print(f"Unexpected error occurred: {e}")
 
 
 if __name__ == "__main__":

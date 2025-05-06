@@ -9,25 +9,25 @@ from download_utils import fetch_photos
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        description="Утилита для скачивания фото NASA APOD"
+        description="Utility for downloading images from NASA APOD"
     )
     parser.add_argument(
         "--count",
         type=int,
         default=10,
-        help="Количество фото для скачивания"
+        help="Number of images to download"
     )
     parser.add_argument(
         "--folder",
         type=Path,
         default="images",
-        help="Директория для сохранения изображений"
+        help="Directory to save images"
     )
     return parser
 
 
 def fetch_apod_data(nasa_token, count):
-    """Отправляет запрос к API NASA APOD и возвращает JSON с данными о фото."""
+    """Sends a request to the NASA APOD API and returns JSON data about the images."""
     apod_url = "https://api.nasa.gov/planetary/apod"
     params = {
         "api_key": nasa_token,
@@ -39,7 +39,7 @@ def fetch_apod_data(nasa_token, count):
 
 
 def get_apod_photos(data):
-    """Извлекает список ссылок на изображения (исключая видео)."""
+    """Extracts image URLs from the response (excluding videos)."""
     result = []
     for item in data:
         if item.get("media_type") == "image":
@@ -57,7 +57,7 @@ def main():
     data = fetch_apod_data(nasa_token, count)
     apod_photos = get_apod_photos(data)
     fetch_photos(apod_photos, images_dir, "apod")
-    print("Фото от NASA APOD сохранены!")
+    print("NASA APOD saved!")
 
 
 if __name__ == "__main__":

@@ -11,31 +11,31 @@ from download_utils import fetch_photos
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        description="Утилита для скачивания фото NASA EPIC"
+        description="Utility for downloading images from NASA EPIC"
     )
     parser.add_argument(
         "--count",
         type=int,
         default=10,
-        help="Количество фото для скачивания"
+        help="Number of images to download"
     )
     parser.add_argument(
         "--folder",
         type=Path,
         default="images",
-        help="Директория для сохранения изображений"
+        help="Directory to save images"
     )
     return parser
 
 
 def get_epic_date():
-    """Возвращает дату за 7 дней до текущей в формате YYYY-MM-DD."""
+    """Returns the date 7 days ago in YYYY-MM-DD format."""
     week_ago = datetime.today() - timedelta(days=7)
     return week_ago.strftime("%Y-%m-%d")
 
 
 def fetch_epic_data(date_str, nasa_token):
-    """Делает запрос к NASA EPIC API и возвращает JSON-данные."""
+    """Sends a request to NASA EPIC API and returns JSON data."""
     epic_url = f"https://api.nasa.gov/EPIC/api/natural/date/{date_str}"
     params = {"api_key": nasa_token}
     response = requests.get(epic_url, params=params)
@@ -44,7 +44,7 @@ def fetch_epic_data(date_str, nasa_token):
 
 
 def build_epic_image_urls(data, date_str, count, nasa_token):
-    """Создаёт список ссылок на изображения по данным EPIC."""
+    """Builds a list of image URLs from EPIC API data."""
     date = datetime.strptime(date_str, "%Y-%m-%d")
     params = {"api_key": nasa_token}
     result = []
@@ -79,7 +79,7 @@ def main():
     data = fetch_epic_data(date_str, nasa_token)
     epic_photos = build_epic_image_urls(data, date_str, count, nasa_token)
     fetch_photos(epic_photos, images_dir, "epic")
-    print("Фото от NASA EPIC сохранены!")
+    print("NASA EPIC images saved!")
 
 
 if __name__ == "__main__":

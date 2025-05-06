@@ -2,7 +2,7 @@ import os
 
 
 def collect_file_paths(directory):
-    """Собирает пути ко всем файлам из указанной директории и её поддиректорий."""
+    """Collects paths to all files in the specified directory and its subdirectories."""
     file_paths = []
     for root, dirs, files in os.walk(directory):
         for file in files:

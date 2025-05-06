@@ -10,16 +10,16 @@ from publish_utils import collect_file_paths, publish_single_photo
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        description="Публикует указанную или случайную фотографию в Telegram"
+        description="Publishes a specified or random photo to a Telegram channel"
     )
     parser.add_argument(
         "--filepath",
-        help="Путь к конкретной фотографии. Если не указан — будет выбрана случайная."
+        help="Path to a specific image. If not specified, a random one will be selected."
     )
     parser.add_argument(
         "--folder",
         default="images",
-        help="Директория, из которой будет выбрано случайное изображение"
+        help="Directory to select a random image from"
     )
     return parser
 
@@ -33,7 +33,7 @@ def main():
     file_paths = collect_file_paths(args.folder)
     file_path = args.filepath or random.choice(file_paths)
     publish_single_photo(bot, chat_id, file_path)
-    print(f"Фото опубликовано: {file_path}")
+    print(f"Photo published to Telegram: {file_path}")
 
 
 if __name__ == "__main__":
